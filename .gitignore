@@ -1,0 +1,7 @@
+venv/
+__pycache__/
+*.pyc
+output/
+progress.json
+models/
+.env
