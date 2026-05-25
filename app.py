@@ -3,14 +3,16 @@ import asyncio
 from pdf_reader import extract_text
 from narrator import generate_voice
 from emotion import detect_emotion
-
+from file_utils import clean_filename
 from metadata_detector import detect_metadata
 from story_detector import find_story_start
-
-from title_generator import generate_section_title
-from book_parser import parse_book
-from audiobook_menu import show_main_menu
-from progress_tracker import (save_progress,load_progress)
+from chapter_mapper import map_chapters
+from toc_detector import extract_toc
+from narrative_label import generate_narrative_label
+from text_cleaner import clean_text
+from ui import ( header, show_book_info, show_menu )
+from content_cleaner import clean_content
+from subtitle_formatter import format_narration
 
 PDF_PATH = "books/book.pdf"
 
@@ -28,7 +30,7 @@ async def generate_intro(metadata, total_sections):
 
     {metadata['author']}
 
-    This book contains {total_sections} sections.
+    This book contains {total_sections} chapters.
 
     Starting your journey now.
     """
@@ -39,39 +41,67 @@ async def generate_intro(metadata, total_sections):
         "output/intro.mp3"
     )
 
-    print("Intro generated.")
+    print("\nIntro generated.")
 
 
 async def generate_section(title, content, index):
 
-    print(f"\nGenerating {title}")
+    print(f"\nGenerating Chapter: {title}")
 
-    generated_title = generate_section_title(
-        content[:1500]
+    narrative_label = generate_narrative_label(
+        content[:3000]
     )
 
-    print(f"AI Section Title: {generated_title}")
-
-    emotions = detect_emotion(content[:1000])
+    print(
+        f"Narrative Tone   : "
+        f"{narrative_label}"
+    )
+    
+    emotions = detect_emotion(
+        content[:1000]
+    )
 
     top_emotion = max(
         emotions,
         key=lambda x: x["score"]
     )
 
-    emotion_label = top_emotion["label"]
+    emotion_label = top_emotion["label"].capitalize()
 
-    print(f"Emotion: {emotion_label}")
+    print(f"Emotion Detected: {emotion_label}")
 
-    output_file = f"output/chapter_{index}.mp3"
+    safe_title = clean_filename(title)
 
+    output_file = (
+        f"output/"
+        f"{index:02d}_{safe_title}.mp3"
+    )
+    content = clean_content(content)
+    content = clean_text(content)
+
+    content = format_narration(content)      
+
+    # add pause after opening speaker label
+    words = content.split()
+
+    if len(words) > 3:
+
+        first_word = words[0]
+
+        if first_word.istitle():
+
+            words[0] = first_word + "..."
+
+            content = " ".join(words)
+    
     narration = f"""
 
-    Now reading:
+    Chapter Title...
 
-    {generated_title}
+    {title}...
 
     {content[:5000]}
+
     """
 
     await generate_voice(
@@ -80,7 +110,10 @@ async def generate_section(title, content, index):
         output_file
     )
 
-    print(f"Generated: {output_file}")
+    print(
+        f"\nChapter Generated:"
+        f"\n{output_file}"
+    )
 
 
 async def main():
@@ -89,45 +122,76 @@ async def main():
 
     pages = extract_text(PDF_PATH)
 
-    print(f"Pages Extracted: {len(pages)}")
+    print(
+        f"Pages Extracted: "
+        f"{len(pages)}"
+    )
 
     metadata = detect_metadata(pages)
 
-    print(f"Book Title: {metadata['title']}")
-    print(f"Author: {metadata['author']}")
+    print(
+        f"Book Title: "
+        f"{metadata['title']}"
+    )
+
+    print(
+        f"Author: "
+        f"{metadata['author']}"
+    )
 
     story_start = find_story_start(pages)
 
-    print(f"Story starts near page: {story_start + 1}")
+    print(
+        f"Story starts near page: "
+        f"{story_start + 1}"
+    )
 
     story_pages = pages[story_start:]
 
-    text = "\n\n".join(
-        page["text"]
-        for page in story_pages
+
+    print("\nExtracting TOC...")
+
+    toc = extract_toc(pages)
+
+    print(
+        f"TOC Chapters Found: "
+        f"{len(toc)}"
     )
 
-    print("Parsing book structure...")
+    print("\nMapping chapters...")
 
-    sections = parse_book(text)
-
-    print(f"Found {len(sections)} sections.")
-
-    await generate_intro(
-        metadata,
-        len(sections)
+    sections = map_chapters(
+        toc,
+        story_pages
     )
 
-    current_index = load_progress()
-    print(f"\nResuming from section {current_index + 1}" ) 
+    print(
+        f"TOC Chapters Loaded: "
+        f"{len(toc)}"
+    )
+
+    current_index = 0
 
     while True:
 
-        choice = show_main_menu(
-            metadata,
-            len(sections)
+        header()
+
+        current_title = None
+
+        if current_index < len(sections):
+
+            current_title = (
+                sections[current_index][0]
+            )
+
+        show_book_info(metadata, len(toc), current_title, current_index)
+        show_menu()
+
+        choice = input(
+            "\nEnter your choice: "
         )
 
+        # INTRO
         if choice == "1":
 
             await generate_intro(
@@ -135,11 +199,23 @@ async def main():
                 len(sections)
             )
 
+            input(
+                "\nPress Enter to continue..."
+            )
+
+        # CURRENT CHAPTER
         elif choice == "2":
 
             if current_index >= len(sections):
 
-                print("\nAll sections generated.")
+                print(
+                    "\nAll chapters generated."
+                )
+
+                input(
+                    "\nPress Enter to continue..."
+                )
+
                 continue
 
             title, content = sections[current_index]
@@ -151,13 +227,19 @@ async def main():
             )
 
             current_index += 1
-            save_progress(current_index)
 
+            input(
+                "\nPress Enter to continue..."
+            )
+
+        # FULL AUDIOBOOK
         elif choice == "3":
 
             while current_index < len(sections):
 
-                title, content = sections[current_index]
+                title, content = (
+                    sections[current_index]
+                )
 
                 await generate_section(
                     title,
@@ -166,20 +248,33 @@ async def main():
                 )
 
                 current_index += 1
-                save_progress(current_index)
 
-            print("\nFull audiobook generated.")
+            print(
+                "\nFull audiobook generated."
+            )
 
+            input(
+                "\nPress Enter to continue..."
+            )
+
+        # EXIT
         elif choice == "4":
 
-            print("\nExiting AI Audiobook Engine.")
+            print(
+                "\nExiting AI Vook Reader."
+            )
+
             break
 
         else:
 
             print("\nInvalid choice.")
-        
-    print("Session completed.")
+
+            input(
+                "\nPress Enter to continue..."
+            )
+
+    print("\nSession completed.")
 
 
 if __name__ == "__main__":

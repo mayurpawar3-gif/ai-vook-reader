@@ -1,176 +1,182 @@
-# 🎧 AI Audiobook Engine v1.0
+# 🎧 AI Vook Reader
 
-An intelligent AI-powered audiobook generation system that transforms PDF books into emotionally adaptive narrated audio experiences.
+### Narrative Intelligence Engine for Cinematic AI Audiobooks
+
+AI Vook Reader is an intelligent audiobook generation system that transforms PDF books into emotionally adaptive narrated audio experiences using AI-powered narrative analysis, semantic parsing, and dynamic voice generation.
 
 ---
 
-# 🚀 Features
+# 🚀 Core Features
 
-## 📚 Smart PDF Processing
-- Extracts text from PDF books
-- Detects story starting point
-- Removes front matter noise
-- Semantic section splitting
+## 📚 Intelligent PDF Processing
+- Smart PDF text extraction
+- Story start detection
+- Front-matter filtering
+- Table of Contents parsing
+- Dynamic chapter mapping
+- Content preprocessing pipeline
 
-## 🧠 AI Narrative Understanding
+---
+
+## 🧠 Narrative Intelligence
 - Emotion detection
-- AI-generated section titles
-- Semantic content chunking
+- Narrative tone analysis
+- AI-assisted section understanding
+- Semantic narration formatting
+- Subtitle-aware pacing
+- Context-aware narration cleanup
+
+---
+
+## 🎙 AI Audiobook Generation
+- Emotion-adaptive voice selection
 - Dynamic narration flow
+- Edge TTS integration
+- Cinematic audiobook pacing
+- Structured audiobook output
+- Automatic MP3 generation
 
-## 🎙 Adaptive Audiobook Generation
-- Emotion-aware voice selection
-- AI narration using Edge TTS
-- Multi-section audiobook output
-- Interactive audiobook generation
+---
 
-## 💾 Progress Tracking
-- Save listening progress
-- Resume generation automatically
-- Persistent audiobook sessions
+## 💾 Persistent Progress System
+- Save audiobook progress
+- Resume generation sessions
+- Persistent reading state
+- Interactive audiobook workflow
 
-## 🎮 Interactive CLI Interface
-- Generate intro
-- Generate next section
+---
+
+## 🖥 Interactive CLI Experience
+- Generate introduction
+- Generate current chapter
 - Generate full audiobook
-- Resume progress
+- Resume audiobook sessions
+- Real-time generation feedback
 
 ---
 
-# 🏗 Project Architecture
+# 🏗 System Architecture
 
 ```plaintext
-PDF
-↓
+PDF Book
+   ↓
 Text Extraction
-↓
+   ↓
+Content Cleaning
+   ↓
 Story Detection
-↓
-Semantic Parsing
-↓
+   ↓
+TOC Intelligence
+   ↓
+Chapter Mapping
+   ↓
+Narrative Intelligence
+   ↓
 Emotion Analysis
-↓
+   ↓
+Voice Direction
+   ↓
 AI Narration
-↓
+   ↓
 Audiobook Generation
-```
 
----
-
-# 📂 Project Structure
-
-```plaintext
+Project Structure
 ai-audiobook/
 │
 ├── app.py
-├── audiobook_menu.py
-├── audio_director.py
-├── book_parser.py
-├── emotion.py
-├── metadata_detector.py
 ├── narrator.py
+├── audio_director.py
 ├── pdf_reader.py
-├── progress_tracker.py
+├── chapter_mapper.py
+├── toc_detector.py
+├── metadata_detector.py
 ├── story_detector.py
+├── emotion.py
+├── narrative_label.py
+├── content_cleaner.py
+├── subtitle_formatter.py
+├── text_cleaner.py
+├── progress_tracker.py
 ├── title_generator.py
 │
 ├── books/
 ├── output/
+├── models/
 └── README.md
-```
-
----
-
-# ⚙️ Installation
-
-## 1. Clone Repository
-
-```bash
-git clone <your-repo-link>
-cd ai-audiobook
-```
-
-## 2. Create Virtual Environment
-
-```bash
+⚙️ Installation
+1. Clone Repository
+git clone https://github.com/mayurpawar3-gif/ai-vook-reader.git
+cd ai-vook-reader
+2. Create Virtual Environment
 python -m venv venv
-```
-
-## 3. Activate Environment
-
-### Windows
-```bash
+3. Activate Environment
+Windows
 venv\Scripts\activate
-```
-
-### Mac/Linux
-```bash
+macOS / Linux
 source venv/bin/activate
-```
-
-## 4. Install Dependencies
-
-```bash
+4. Install Dependencies
 pip install -r requirements.txt
-```
+▶️ Running the Engine
 
----
+Place your PDF file inside:
 
-# ▶️ Running the Project
-
-Place your PDF inside:
-
-```plaintext
 books/book.pdf
-```
 
-Then run:
+Run the application:
 
-```bash
 python app.py
-```
 
----
 
-# 🎯 Current Version
+🎯 Current Development Status
+✅ Version 1 — Functional AI Audiobook Engine
+Completed
+Intelligent PDF parsing
+Dynamic TOC detection
+Emotion-aware narration
+Narrative pacing improvements
+Subtitle-aware formatting
+Audiobook generation pipeline
+Persistent progress tracking
+Content preprocessing pipeline
 
-## ✅ v1.0 Complete
-- Smart PDF parsing
-- Emotion-aware narration
-- Interactive audiobook generation
-- Persistent progress tracking
 
----
+🚀 Planned V2 Features
+🧠 Narrative Intelligence V2
+Character tracking
+Suspense analysis
+Scene classification
+Dynamic pacing control
+Emotional memory system
+🎙 Voice Intelligence
+Multi-character voices
+Dialogue-aware narration
+Cinematic speech pacing
+Hindi pronunciation support
+Multilingual narration
 
-# 🚀 Planned Future Upgrades
+🌐 Application Layer
+Flask / FastAPI backend
+React frontend
+Live audiobook generation
+Upload interface
+Built-in audiobook player
+Cloud generation support
+🛠 Technology Stack
+Python
+Edge TTS
+HuggingFace Transformers
+Sentence Transformers
+PDFPlumber
+Scikit-learn
+AsyncIO
 
-- 🎵 Dynamic ambience engine
-- 🎭 Character voice system
-- 🌐 Web application
-- 📱 Mobile interface
-- 🧠 AI narrative structure model
-- ☁️ Cloud audiobook generation
-- ▶️ Built-in audio player
 
----
+📌 Project Vision
 
-# 🛠 Technologies Used
+AI Vook Reader aims to evolve into a fully intelligent cinematic audiobook generation platform capable of understanding narrative structure, emotional context, pacing, and immersive storytelling dynamics.
 
-- Python
-- Edge TTS
-- HuggingFace Transformers
-- Sentence Transformers
-- PDFPlumber
-- Scikit-learn
-
----
-
-# 📜 License
-
+ License
 MIT License
 
----
-
-# 👨‍💻 Author
-
-Built by Mayur 🚀
+Author
+Built by Mayur Pawar 
