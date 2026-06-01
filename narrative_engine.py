@@ -27,11 +27,14 @@ class NarrativeEngine:
             self.tension_detector.detect(text)
         )
         
-        emotion, intensity = (
+        emotion, intensity, secondary = (
             self.emotion_detector.detect(text)
         )
 
-        state.emotion = emotion
+        state.primary_emotion = emotion
 
         state.emotion_intensity = intensity
+
+        state.secondary_emotions = secondary
+        
         return state

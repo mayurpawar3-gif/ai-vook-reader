@@ -7,16 +7,35 @@ class EmotionDetector:
 
         results = detect_emotion(text)
 
-        best = max(
+        print("\nEmotion Candidates:")
+
+        for r in results[:5]:
+
+            print(
+                r["label"],
+                round(r["score"], 3)
+            )
+
+        top_emotions = sorted(
             results,
-            key=lambda x: x["score"]
+            key=lambda x: x["score"],
+            reverse=True
         )
 
-        emotion = best["label"]
+        primary = top_emotions[0]
 
-        intensity = round(
-            best["score"],
-            2
+        secondary = [
+
+            (
+                item["label"],
+                round(item["score"], 3)
+            )
+
+            for item in top_emotions[1:3]
+        ]
+
+        return (
+            primary["label"],
+            round(primary["score"], 2),
+            secondary
         )
-
-        return emotion, intensity

@@ -1,24 +1,34 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 
 @dataclass
 class NarrativeState:
 
     scene_type: str = "unknown"
-    emotion: str = "neutral"
+
+    primary_emotion: str = "neutral"
+
     emotion_intensity: float = 0.0
+
+    secondary_emotions: list = field(
+        default_factory=list
+    )
+
     energy: float = 0.0
+
     tension: str = "stable"
+
     narrative_role: str = "unknown"
 
     def summary(self):
 
-        return f"""    
+        return f"""
 Narrative Analysis
 ------------------
 Scene Type      : {self.scene_type}
-Emotion         : {self.emotion}
+Primary Emotion : {self.primary_emotion}
 Intensity       : {self.emotion_intensity}
+Secondary       : {self.secondary_emotions}
 Energy          : {self.energy}
 Tension         : {self.tension}
 Role            : {self.narrative_role}

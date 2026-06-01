@@ -1,6 +1,7 @@
 import asyncio
 
 from pdf_reader import extract_text
+from narrative_engine import NarrativeEngine
 from narrator import generate_voice
 from emotion import detect_emotion
 from file_utils import clean_filename
@@ -48,26 +49,24 @@ async def generate_section(title, content, index):
 
     print(f"\nGenerating Chapter: {title}")
 
-    narrative_label = generate_narrative_label(
+    narrative_label = generate_narrative_label(content[:3000])
+    print( f"Narrative Tone   : " f"{narrative_label}" )
+
+    engine = NarrativeEngine()
+
+    print("\nTEXT SENT TO EMOTION MODEL:")
+    print("-" * 50)
+    print(content[:512])
+    print("-" * 50)
+    
+    state = engine.analyze(
         content[:3000]
     )
-
-    print(
-        f"Narrative Tone   : "
-        f"{narrative_label}"
-    )
     
-    emotions = detect_emotion(
-        content[:1000]
-    )
+    print(state.summary())
 
-    top_emotion = max(
-        emotions,
-        key=lambda x: x["score"]
-    )
-
-    emotion_label = top_emotion["label"].capitalize()
-
+    emotion_label = (state.primary_emotion.capitalize())
+    
     print(f"Emotion Detected: {emotion_label}")
 
     safe_title = clean_filename(title)
